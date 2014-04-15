@@ -13028,7 +13028,7 @@ do :
   ac_fn_c_check_func "$LINENO" "__malloc_hook" "ac_cv_func___malloc_hook"
 if test "x$ac_cv_func___malloc_hook" = xyes; then :
   cat >>confdefs.h <<_ACEOF
-#define HAVE___MALLOC_HOOK 1
+#define /* HAVE___MALLOC_HOOK */
 _ACEOF
 
 fi

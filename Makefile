@@ -1,9 +1,11 @@
-CC=emcc
-THIRDPARTY=src/third_party
-OPUSVER=1.1
-OPUSSRC=$(THIRDPARTY)/opus/$(OPUSVER)
-EMCONF=emconfigure
+THIS_MAKEFILE_PATH:=$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
+THIS_DIR:=$(shell cd $(dir $(THIS_MAKEFILE_PATH));pwd)
+
+OPUSSRC=src/third_party/opus/1.1
+BUILDDIR=$(THIS_DIR)/build
+
 all: opuslib
 
-opuslib: 
-	$(EMCONF) src/third_party/.configure --prefix=build/opuslib
+opuslib:
+	cd $(OPUSSRC); emconfigure ./configure --prefix=$(BUILDDIR)
+	cd $(OPUSSRC); emmake make install
