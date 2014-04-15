@@ -19,7 +19,7 @@ https://github.com/kripken/emscripten/wiki/Getting-Started-on-Ubuntu-12.10
 - Execute:
   - ```$ emmake make install```
 
-#####Compiling Opus Library LLVM and Wrapper to JavaScript#####
+#####Compiling Opus Library LLVM and C Wrapper to JavaScript#####
 - Execute from --prefix= path used above:
   - ```$ emcc opusjs.c -I include/ -o opuslib.js -L lib/libopus.a -s EXPORTED_FUNCTIONS="[...]"```
 - You can now use opuslib.js with the included opus.js helper file in this repository.
