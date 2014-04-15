@@ -8,16 +8,12 @@ Make sure you have emscripten set up properly:
 
 https://github.com/kripken/emscripten/wiki/Getting-Started-on-Ubuntu-12.10
 
+```emcc```, ```emmake``` and ```emconfigure``` should all be on your path.
+
 #####Building the Opus Codec Library w/ LLVM#####
-- Obtain the Opus codec v1.1 source:
-  - http://downloads.xiph.org/releases/opus/opus-1.1.tar.gz
-- tar -xvf to location of your choosing.
-- cd into the opus library directory
-- Execute: 
-  - ```$ emconfigure ./configure --prefix=<wherever you want it to go>```
-- Open the generated config.h file and comment out the ```#define HAVE___MALLOC_HOOK 1``` line if it is set (this fixed my only issue).
-- Execute:
-  - ```$ emmake make install```
+- Clone this repository.
+- Execute make in the main directory.
+- Resulting build should be in ```opusjs/build``` folder.
 
 #####Compiling Opus Library LLVM and C Wrapper to JavaScript#####
 - Execute from --prefix= path used above:
