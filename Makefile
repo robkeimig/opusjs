@@ -3,13 +3,26 @@ THIS_DIR:=$(shell cd $(dir $(THIS_MAKEFILE_PATH));pwd)
 
 OPUSSRC=src/third_party/opus/1.1
 OPUSBUILDDIR=$(THIS_DIR)/build/opus
-OPUSLIBJS=src/opusjs/opuslib.js
+OPUSLIB=$(OPUSBUILDDIR)/lib/libopus.a
+OPUSLIBINC=$(OPUSBUILDDIR)/include 
+
+OPUSJSBUILDDIR=$(THIS_DIR)/build/opusjs
+OPUSLIBJS=$(OPUSJSBUILDDIR)/opuslib.js
+OPUSJS=src/opusjs/opus.js
+OPUSWRAPPER=src/opusjs/wrapper.c
+
+EXPORTEDFUNCTIONS="[]"
 
 all: $(OPUSLIBJS)
 
-$(OPUSLIBJS): $(OPUSBUILDDIR)/lib/libopus.a 
-	
-$(OPUSBUILDDIR)/lib/libopus.a:
+$(OPUSLIB):	
+	$(info Building Opus library...)
 	cd $(OPUSSRC); emconfigure ./configure --prefix=$(OPUSBUILDDIR)
 	cd $(OPUSSRC); emmake make clean
 	cd $(OPUSSRC); emmake make install
+
+$(OPUSLIBJS): $(OPUSLIB)
+	$(info Building OpusJS...)
+	mkdir -p $(OPUSJSBUILDDIR)
+	emcc $(OPUSWRAPPER) -I $(OPUSLIBINC) -o $(OPUSLIBJS) -L $(OPUSLIB) -s EXPORTED_FUNCTIONS=$(EXPORTEDFUNCTIONS)
+	cp $(OPUSJS) $(OPUSJSBUILDDIR)
