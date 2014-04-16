@@ -7,6 +7,7 @@ Javascript and wrappers for the standard opus codec implementation.
 
 ###Build Steps for Linux (*Ubuntu 12.04 x86*)###
 
+NodeJS is optional, but very useful for debugging the JavaScript.
 
 Make sure you have emscripten set up properly:
 
@@ -14,7 +15,7 @@ https://github.com/kripken/emscripten/wiki/Getting-Started-on-Ubuntu-12.10
 
 ```emcc```, ```emmake``` and ```emconfigure``` should all be on your path.
 
-Make sure to test emcc with the hello_world example as described in the link above to ensure functionality.
+Make sure to test emcc with the hello_world example as described in the link above to ensure functionality. 
 
 #####Building the project#####
 - Clone this repository.
