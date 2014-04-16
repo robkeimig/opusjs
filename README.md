@@ -3,20 +3,26 @@ opusjs
 
 Javascript and wrappers for the standard opus codec implementation.
 
-###Build Steps (Ubuntu)###
+*I have not attempted to build on Windows or OSX yet, but the general idea should be the same as emscripten supports both platforms in addition to Linux. Makefiles/Visual Studio project files will be required. Feel free to submit these if you get this process working in your environment.*
+
+###Build Steps for Linux (*Ubuntu 12.04 x86*)###
+
+NodeJS is optional, but very useful for debugging the JavaScript.
+
 Make sure you have emscripten set up properly:
 
 https://github.com/kripken/emscripten/wiki/Getting-Started-on-Ubuntu-12.10
 
 ```emcc```, ```emmake``` and ```emconfigure``` should all be on your path.
 
-#####Building the Opus Codec Library w/ LLVM#####
+Make sure to test emcc with the hello_world example as described in the link above to ensure functionality. 
+
+#####Building the project#####
 - Clone this repository.
 - Execute make in the main directory.
-- Resulting build should be in ```opusjs/build``` folder.
+- Resulting build should be in ```<project root>/build``` folder.
 
-#####Compiling Opus Library LLVM and C Wrapper to JavaScript#####
-- Execute from --prefix= path used above:
-  - ```$ emcc opusjs.c -I include/ -o opuslib.js -L lib/libopus.a -s EXPORTED_FUNCTIONS="[...]"```
-- You can now use opuslib.js with the included opus.js helper file in this repository.
-
+#####Using on your site#####
+- Include ```opus.js``` and ```opuslib.js```.
+- Note that ```opus.js``` depends on ```opuslib.js```.
+- Read more in the repository wiki #todo
