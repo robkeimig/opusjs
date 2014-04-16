@@ -3,7 +3,7 @@ opusjs
 
 Javascript and wrappers for the standard opus codec implementation.
 
-*I have not attempted to build on Windows or OSX yet, but the general idea should be the same as emscripten supports both platforms in addition to Linux.*
+*I have not attempted to build on Windows or OSX yet, but the general idea should be the same as emscripten supports both platforms in addition to Linux. Makefiles/Visual Studio project files will be required. Feel free to submit these if you get this process working on your environment*
 
 ###Build Steps for Linux (*Ubuntu 12.04 x86*)###
 
