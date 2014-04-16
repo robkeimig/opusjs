@@ -11,10 +11,14 @@ OPUSLIBJS=$(OPUSJSBUILDDIR)/opuslib.js
 OPUSJS=src/opusjs/opus.js
 OPUSWRAPPER=src/opusjs/wrapper.c
 
-EXPORTEDFUNCTIONS="[]"
+EXPORTEDFUNCTIONS="['_main', '_OpusEncoderInitVoip', '_OpusEncoderInitAudio']"
 
 all: $(OPUSLIBJS)
 
+rebuild_opusjs: 
+	rm -rf $(OPUSJSBUILDDIR)
+	$(MAKE) $(OPUSLIBJS)
+	
 $(OPUSLIB):	
 	$(info Building Opus library...)
 	cd $(OPUSSRC); emconfigure ./configure --prefix=$(OPUSBUILDDIR)
