@@ -51,7 +51,7 @@ int OpusEncodeFloat(const float *pcm, int frame_size, unsigned char* data, opus_
 
 int main(void)
 {
-	printf("Loaded OpusJS library\n");
+	printf("Loaded Opus Codec library");
 	//printf("Testing functionality...\n");
 	//int result = 0;
 
