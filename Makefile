@@ -12,7 +12,7 @@ OPUSJS=src/opusjs/opus.js
 OPUSWRAPPER=src/opusjs/wrapper.c
 
 EMCCFLAGS=-O2 --llvm-opts 3
-EXPORTEDFUNCTIONS="['_main', '_OpusEncoderInitVoip', '_OpusEncoderInitAudio', '_OpusEncodeFloat', '_OpusEncode']"
+EXPORTEDFUNCTIONS="['_main', '_OpusEncoderInitVoip', '_OpusEncoderInitAudio', '_OpusEncodeFloat', '_OpusEncode', '_OpusDecoderInit', '_OpusDecode', '_OpusDecodeFloat']"
 
 all: $(OPUSLIBJS)
 

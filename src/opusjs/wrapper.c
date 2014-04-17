@@ -2,6 +2,25 @@
 #include <stdio.h>
 
 OpusEncoder* encoder;
+OpusDecoder* decoder;
+
+int OpusDecoderInit(int fs, int channels)
+{
+	int error;
+	opus_decoder_destroy(decoder);
+	decoder = opus_decoder_create(fs, channels, &error);
+	return error;
+}
+
+int OpusDecode(const unsigned char* data, opus_int32 len, opus_int16 *pcm, int frame_size, int decode_fec)
+{
+	return opus_decode(decoder, data, len, pcm, frame_size, decode_fec);
+}
+
+int OpusDecodeFloat(const unsigned char* data, opus_int32 len, float* pcm, int frame_size, int decode_fec)
+{
+	return opus_decode_float(decoder, data, len, pcm, frame_size, decode_fec);
+}
 
 int OpusEncoderInitVoip(int fs, int channels)
 {
@@ -21,17 +40,13 @@ int OpusEncoderInitAudio(int fs, int channels)
 
 int OpusEncode(const opus_int16 *pcm, int frame_size, unsigned char* data, opus_int32 max_data_bytes)
 {
-	int error;
-	error = opus_encode(encoder, pcm, frame_size, data, max_data_bytes);
-	return error;
+	return opus_encode(encoder, pcm, frame_size, data, max_data_bytes);
 }
 
 
 int OpusEncodeFloat(const float *pcm, int frame_size, unsigned char* data, opus_int32 max_data_bytes)
 {
-	int error;
-	error = opus_encode_float(encoder, pcm, frame_size, data, max_data_bytes);
-	return error;
+	return opus_encode_float(encoder, pcm, frame_size, data, max_data_bytes);
 }
 
 int main(void)
