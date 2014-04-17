@@ -46,12 +46,14 @@ int OpusEncode(const opus_int16 *pcm, int frame_size, unsigned char* data, opus_
 
 int OpusEncodeFloat(const float *pcm, int frame_size, unsigned char* data, opus_int32 max_data_bytes)
 {
-	return opus_encode_float(encoder, pcm, frame_size, data, max_data_bytes);
+	int result = 0;
+	result = opus_encode_float(encoder, pcm, frame_size, data, max_data_bytes);
+	return result;
 }
 
 int main(void)
 {
-	printf("Loaded Opus Codec library");
+	printf("Loaded Opus Codec library. Version: %s\n", "test");
 	//printf("Testing functionality...\n");
 	//int result = 0;
 

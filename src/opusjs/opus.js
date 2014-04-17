@@ -1,82 +1,42 @@
+//js wrappers for wrapper.c functions
 OpusInitializeVoip = Module.cwrap('OpusEncoderInitVoip', 'number', ['number', 'number']);
 OpusInitializeAudio = Module.cwrap('OpusEncoderInitAudio', 'number', ['number', 'number']);
+OpusInitializeDecoder = Module.cwrap('OpusDecoderInit', 'number', ['number, 'number']);
 OpusEncodeFloat = Module.cwrap('OpusEncodeFloat', 'number', ['number', 'number', 'number', 'number']);
-OpusEncode = Module.cwrap('OpusEncode', 'number', ['number', 'number', 'number', 'number']);
-OpusDecoderInit = Module.cwrap('OpusDecoderInit', 'number', ['number', 'number']);
-OpusDecodeFloat = Module.cwrap('OpusDecodeFloat', 'number', ['number', 'number', 'number', 'number', 'number']);
-OpusDecode = Module.cwrap('OpusDecode', 'number', ['number', 'number', 'number', 'number', 'number']);
 
-//Allocate input buffer
-var EncoderInputBuffer = new Object();
-EncoderInputBuffer.Length = 4096*4;
-EncoderInputBuffer.Bytes = EncoderInputBuffer.Length * Int16Array.BYTES_PER_ELEMENT;
-EncoderInputBuffer.Ptr = Module._malloc(EncoderInputBuffer.Bytes);
-EncoderInputBuffer.Heap = new Uint8Array(Module.HEAPU8.buffer, EncoderInputBuffer.Ptr, EncoderInputBuffer.Bytes);
-console.log('Allocated ' + EncoderInputBuffer.Bytes + ' bytes for int16 encoder input buffer.');
+//encoder - 32 bit float input buffer
+encoderInputBufferFloat = new Object();
+encoderInputBufferFloat.Length = 4096;
+encoderInputBufferFloat.Bytes = encoderInputBufferFloat.Length * Float32Array.BYTES_PER_ELEMENT;
+encoderInputBufferFloat.Ptr = Module._malloc(encoderInputBufferFloat.Bytes);	//get pointer to 'heap'
+encoderInputBufferFloat.Heap = new Uint8Array(Module.HEAPU8.buffer, encoderInputBufferFloat.Ptr, encoderInputBufferFloat.Bytes);
+console.log('Allocated ' + encoderInputBufferFloat.Bytes + ' bytes for ' + encoderInputBufferFloat.Length + ' sample, 32-bit float encoder input buffer.');
+	
+//encoder - output buffer
+encoderOutputBuffer = new Object();
+encoderOutputBuffer.Length = 8192;
+encoderOutputBuffer.Bytes = encoderOutputBuffer.Length * Uint8Array.BYTES_PER_ELEMENT;
+encoderOutputBuffer.Ptr = Module._malloc(encoderOutputBuffer.Bytes);
+encoderOutputBuffer.Heap = new Uint8Array(Module.HEAPU8.buffer, encoderOutputBuffer.Ptr, encoderOutputBuffer.Bytes);
+console.log('Allocated ' + encoderOutputBuffer.Bytes + ' bytes for encoder output buffer.');
 
-//Allocate float input buffer
-var EncoderInputBufferFloat = new Object();
-EncoderInputBufferFloat.Length = 4096*4;
-EncoderInputBufferFloat.Bytes = EncoderInputBufferFloat.Length * Float32Array.BYTES_PER_ELEMENT;
-EncoderInputBufferFloat.Ptr = Module._malloc(EncoderInputBufferFloat.Bytes);
-EncoderInputBufferFloat.Heap = new Uint8Array(Module.HEAPU8.buffer, EncoderInputBufferFloat.Ptr, EncoderInputBufferFloat.Bytes);
-console.log('Allocated ' + EncoderInputBufferFloat.Bytes + ' bytes for float encoder input buffer.');
+function InitializeVoip(sample_rate, channels){
+	var err = 0;
+	console.log('Initializing Opus VOIP encoder at ' + sample_rate + 'hz w/ ' + channels + ' channels.');
+	err = OpusInitializeVoip(sample_rate, channels);
+	if(err!==0) { console.log('Could not initialize Opus VOIP encoder. Errorcode: ' + err); }
+};
 
-//Allocate output buffer
-var EncoderOutputBuffer = new Object();
-EncoderOutputBuffer.Length = 8192*16;
-EncoderOutputBuffer.Bytes = EncoderOutputBuffer.Length * Uint8Array.BYTES_PER_ELEMENT;
-EncoderOutputBuffer.Ptr = Module._malloc(EncoderOutputBuffer.Bytes);
-EncoderOutputBuffer.Heap = new Uint8Array(Module.HEAPU8.buffer, EncoderOutputBuffer.Ptr, EncoderOutputBuffer.Bytes);
-console.log('Allocated ' + EncoderOutputBuffer.Bytes + ' bytes for encoder output buffer.');
-
-function EncodePCMFloat(pcmdata){
-	EncoderInputBufferFloat.Heap.set(new Uint8Array(pcmdata.buffer));
-	var result = OpusEncodeFloat(EncoderInputBufferFloat.Heap.byteOffset, pcmdata.length,  EncoderOutputBuffer.Heap.byteOffset, EncoderOutputBuffer.Bytes);
-	//console.log('Encoding frame of size ' + pcmdata.length + '. Result: ' + result);
-	return result;
-}
-
-function EncodePCM(pcmdata){
-	EncoderInputBuffer.Heap.set(new Uint8Array(pcmdata.buffer));
-	var result = OpusEncode(EncoderInputBuffer.Heap.byteOffset, pcmdata.length,  EncoderOutputBuffer.Heap.byteOffset, EncoderOutputBuffer.Bytes);
-	//console.log('Encoding frame of size ' + pcmdata.length + '. Result: ' + result);
-	return result;
-}
-
-function DecodeOpus(opusdata){
-	DecoderInputBuffer.Heap.set(new Uint8Array(opusdata.buffer));
-	#todo
-}
-
-var samplecount=480;
-var runcount=1000;
-var samplerate = 48000;
-var inputsamplerate = 44100;
-var channels = 1;
-var floatarr = new Float32Array(samplecount);
-var intarr = new Int16Array(samplecount);
-
-for(var x=0; x<floatarr.length; x++)
-{
-	floatarr[x] = 1-(Math.random());
-	if(floatarr[x] >= 0){
-		intarr[x] = floatarr[x] * 32767;
-	} else {
-		intarr[x] = floatarr[x] * 32768;
+function EncodePCMFloat(pcmdata) {
+	var frame_length = pcmdata.length;
+	var encoded_bytes = 0;
+	encoderInputBufferFloat.Heap.set(new Uint8Array(pcmdata.buffer));
+	encoded_bytes = OpusEncodeFloat(encoderInputBufferFloat.Heap.byteOffset, frame_length, 
+					encoderOutputBuffer.Heap.byteOffset, encoderOutputBuffer.Bytes);
+	if(encoded_bytes < 1) { 
+		console.log('Could not encode frame of length ' + frame_length); 
+		return new Uint8Array();
 	}
-}
+	return encoderOutputBuffer.Heap.subarray(0, encoded_bytes);
+};
 
-var resampler = new Resampler(inputsamplerate, samplerate, channels, 1000, false);
-var resampledfloatarr = resampler.resampler(floatarr);
-OpusInitializeVoip(samplerate, channels);
-console.log('Processing ' + samplecount*runcount + ' samples ' + (samplecount*runcount)/samplerate + ' seconds of audio data');
-console.log('start');
-var totalencbytes = 0;
-for(var x=0; x<runcount; x++)
-{
-	totalencbytes += EncodePCMFloat(floatarr);
-}
-
-console.log('done');
-console.log('total encoded bytes: ' + totalencbytes);
