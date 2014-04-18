@@ -1,7 +1,7 @@
-function Opus(){
+function Opus(input_buffer, output_buffer){
 	//some constants
-	var INPUT_BUFFER_SAMPLES = 4096; //number of samples that the input buffers will be allocated for
-	var OUTPUT_BUFFER_BYTES = 4096; //number of bytes allocated to the encoder output buffer
+	var INPUT_BUFFER_SAMPLES = input_buffer; //number of samples that the input buffers will be allocated for
+	var OUTPUT_BUFFER_BYTES = output_buffer; //number of bytes allocated to the encoder output buffer
 
 	//js wrappers for wrapper.c functions
 	this._initializeVoip = Module.cwrap('OpusEncoderInitVoip', 'number', ['number', 'number']);
