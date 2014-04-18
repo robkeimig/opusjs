@@ -53,15 +53,7 @@ int OpusEncodeFloat(const float *pcm, int frame_size, unsigned char* data, opus_
 
 int main(void)
 {
-	printf("Loaded Opus Codec library. Version: %s\n", "test");
-	//printf("Testing functionality...\n");
-	//int result = 0;
-
-	//result = OpusEncoderInitVoip(48000, 1);
-	//printf("Calling OpusEncoderInitVoip(48000, 1)... return code: %d\n", result);
-	
-	//result = OpusEncoderInitAudio(48000, 1);
-	//printf("Calling OpusEncoderInitAudio(48000, 1)... return code: %d\n", result);
-
+	printf("Loaded Opus Codec library.\n");
+	printf("Version: %s\n", opus_get_version_string());
 	return 0;
 }
