@@ -1,5 +1,6 @@
 {
   "devDependencies": {
-    "connect": "^2.14.4"
+    "connect": "^2.14.4",
+    "socket.io": "^0.9.16"
   }
 }

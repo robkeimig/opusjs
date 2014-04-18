@@ -12,7 +12,7 @@ function CircularBuffer(size){
 		var end = (this._start + this._count) % this._size;
 		this._array[end] = element;
 		if(this._count === this._size){
-			console.log('Buffer overflow!');
+			//console.log('Buffer overflow!');
 			return;
 		} else {
 			this._count += 1;
@@ -21,7 +21,7 @@ function CircularBuffer(size){
 
 	CircularBuffer.prototype.read = function(){
 		if(this._count<=0){
-			console.log('Buffer underflow!');
+			//console.log('Buffer underflow!');
 			return null;
 		}
 		var result = this._array[this._start];
