@@ -6,7 +6,7 @@ var cbuffer = new CircularBuffer(1024*64);
 var pbcbuffer = new CircularBuffer(1024*64);
 var totalenc = 0;
 var opus = new Opus(16384, 1024);
-opus.initializeVoip(OPUS_SAMPLERATE, 1);
+opus.initializeAudio(OPUS_SAMPLERATE, 1);
 
 window.onload = function(){
 	

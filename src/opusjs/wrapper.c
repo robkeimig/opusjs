@@ -4,6 +4,13 @@
 OpusEncoder* encoder;
 OpusDecoder* decoder;
 
+int OpusSetBitrate(int rate)
+{
+	int ret;
+	ret = opus_encoder_ctl(encoder, OPUS_SET_BANDWIDTH(rate));
+	return ret;
+}
+
 int OpusDecoderInit(int fs, int channels)
 {
 	int error;

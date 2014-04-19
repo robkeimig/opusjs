@@ -11,6 +11,7 @@ function Opus(input_buffer, output_buffer){
 	this._encodeInteger = Module.cwrap('OpusEncode', 'number', ['number', 'number', 'number', 'number']);
 	this._decodeFloat = Module.cwrap('OpusDecodeFloat', 'number', ['number', 'number', 'number', 'number', 'number']);
 	this._decodeInteger = Module.cwrap('OpusDecode', 'number', ['number', 'number', 'number', 'number', 'number']);
+	this._setBitrate = Module.cwrap('OpusSetBitrate', 'number', ['number']);
 
 	//main encoder object
 	this._encoder = new Object();
@@ -89,6 +90,13 @@ function Opus(input_buffer, output_buffer){
 			return -1;
 		}
 		return  0;
+	};
+
+	Opus.prototype.setBitrate = function(bitrate){
+		var err = this._setBitrate(bitrate);
+		if(err!==0){
+			console.log('Could not adjust bitrate of encoder. Errorcode: ' + err);
+		}
 	};
 
 	Opus.prototype.encodeFloat = function(pcm_data){
