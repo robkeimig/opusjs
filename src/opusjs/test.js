@@ -1,7 +1,6 @@
 var MIC_READ_SIZE = 512;
 var OPUS_ENCODE_SIZE = 480;
 var OPUS_SAMPLERATE = 48000;
-var PLAYBACK_SAMPLERATE = 44100;
 var cbuffer = new CircularBuffer(1024*64);
 var pbcbuffer = new CircularBuffer(1024*64);
 var totalenc = 0;
